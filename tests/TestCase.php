@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Facade;
 use PHPUnit\Framework\TestCase as Base;
-use Staudenmeir\LaravelMergedRelations\Facades\Schema;
 use Tests\Models\Comment;
 use Tests\Models\Post;
 use Tests\Models\Tag;
@@ -32,10 +31,6 @@ abstract class TestCase extends Base
         $this->seed();
 
         Facade::setFacadeApplication(['db' => $db]);
-
-        Schema::dropViewIfExists('all_comments');
-        Schema::dropViewIfExists('all_posts');
-        Schema::dropViewIfExists('all_taggables');
     }
 
     /**
@@ -46,6 +41,7 @@ abstract class TestCase extends Base
     protected function migrate()
     {
         DB::schema()->dropAllTables();
+        DB::schema()->dropAllViews();
 
         DB::schema()->create('users', function (Blueprint $table) {
             $table->increments('id');
