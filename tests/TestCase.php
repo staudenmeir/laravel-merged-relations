@@ -15,7 +15,7 @@ use Tests\Models\Video;
 
 abstract class TestCase extends Base
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
