@@ -151,3 +151,7 @@ $users = User::with('allComments')->get();
 In the original relationships, it's currently not possible to limit the selected columns or add new columns (e.g. using `withCount()`, `withPivot()`).
 
 In the merged relationships, it's not possible to remove global scopes like `SoftDeletes`. They can only be removed in the original relationships.
+
+## Contributing
+
+Please see [CONTRIBUTING](CONTRIBUTING.md) and [CODE OF CONDUCT](CODE_OF_CONDUCT.md) for details.
