@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/staudenmeir/laravel-merged-relations.svg?branch=master)](https://travis-ci.org/staudenmeir/laravel-merged-relations)
+![CI](https://github.com/staudenmeir/laravel-merged-relations/workflows/CI/badge.svg)
 [![Code Coverage](https://scrutinizer-ci.com/g/staudenmeir/laravel-merged-relations/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/staudenmeir/laravel-merged-relations/?branch=master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/staudenmeir/laravel-merged-relations/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/staudenmeir/laravel-merged-relations/?branch=master)
 [![Latest Stable Version](https://poser.pugx.org/staudenmeir/laravel-merged-relations/v/stable)](https://packagist.org/packages/staudenmeir/laravel-merged-relations)
