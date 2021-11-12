@@ -15,6 +15,10 @@ Supports Laravel 5.5.25+.
 
     composer require staudenmeir/laravel-merged-relations:"^1.0"
 
+Use this command if you are in PowerShell on Windows (e.g. in VS Code):
+
+    composer require staudenmeir/laravel-merged-relations:"^^^^1.0"
+
 ## Usage
 
 - [Use Cases](#use-cases)
