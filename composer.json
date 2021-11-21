@@ -9,12 +9,12 @@
         }
     ],
     "require": {
-        "php": "^7.3|^8.0",
-        "illuminate/database": "^8.0",
-        "staudenmeir/laravel-migration-views": "^1.5"
+        "php": "^8.0.2",
+        "illuminate/database": "^9.0",
+        "staudenmeir/laravel-migration-views": "dev-master"
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.3"
+        "orchestra/testbench": "^7.0"
     },
     "autoload": {
         "psr-4": {
@@ -24,6 +24,13 @@
     "autoload-dev": {
         "psr-4": {
             "Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Staudenmeir\\LaravelMergedRelations\\DatabaseServiceProvider"
+            ]
         }
     },
     "minimum-stability": "dev",

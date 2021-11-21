@@ -11,7 +11,7 @@ class SchemaTest extends TestCase
 {
     public function testCreateMergeView()
     {
-        Schema::createMergeView('all_comments', [(new User)->comments(), (new User)->postComments()]);
+        Schema::createMergeView('all_comments', [(new User())->comments(), (new User())->postComments()]);
 
         $allComments = User::first()->allComments;
         $this->assertEquals([1, 1, 2, 3, 4], $allComments->pluck('id')->all());
@@ -19,7 +19,7 @@ class SchemaTest extends TestCase
 
     public function testCreateMergeViewWithoutDuplicates()
     {
-        Schema::createMergeViewWithoutDuplicates('all_comments', [(new User)->comments(), (new User)->postComments()]);
+        Schema::createMergeViewWithoutDuplicates('all_comments', [(new User())->comments(), (new User())->postComments()]);
 
         $allComments = User::first()->allComments;
         $this->assertEquals([1, 2, 3, 4], $allComments->pluck('id')->all());
@@ -27,9 +27,9 @@ class SchemaTest extends TestCase
 
     public function testCreateOrReplaceMergeView()
     {
-        Schema::connection('default')->createView('all_posts', Post::query());
+        Schema::connection('testing')->createView('all_posts', Post::query());
 
-        Schema::createOrReplaceMergeView('all_posts', [(new Comment)->post()]);
+        Schema::createOrReplaceMergeView('all_posts', [(new Comment())->post()]);
 
         $allPosts = Comment::first()->allPosts;
         $this->assertEquals([1], $allPosts->pluck('id')->all());
@@ -37,9 +37,9 @@ class SchemaTest extends TestCase
 
     public function testCreateOrReplaceMergeViewWithoutDuplicates()
     {
-        Schema::connection('default')->createView('all_posts', Comment::query());
+        Schema::connection('testing')->createView('all_posts', Comment::query());
 
-        Schema::createOrReplaceMergeViewWithoutDuplicates('all_comments', [(new User)->comments(), (new User)->postComments()]);
+        Schema::createOrReplaceMergeViewWithoutDuplicates('all_comments', [(new User())->comments(), (new User())->postComments()]);
 
         $allComments = User::first()->allComments;
         $this->assertEquals([1, 2, 3, 4], $allComments->pluck('id')->all());

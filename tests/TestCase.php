@@ -2,11 +2,11 @@
 
 namespace Tests;
 
-use Illuminate\Database\Capsule\Manager as DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Facade;
-use PHPUnit\Framework\TestCase as Base;
+use Illuminate\Support\Facades\DB;
+use Orchestra\Testbench\TestCase as Base;
+use Staudenmeir\LaravelMergedRelations\DatabaseServiceProvider;
 use Staudenmeir\LaravelMergedRelations\Facades\Schema;
 use Tests\Models\Comment;
 use Tests\Models\Post;
@@ -20,45 +20,22 @@ abstract class TestCase extends Base
     {
         parent::setUp();
 
-        $config = require __DIR__.'/config/database.php';
-
-        $db = new DB;
-        $db->addConnection($config[getenv('DATABASE') ?: 'sqlite']);
-        $db->setAsGlobal();
-        $db->bootEloquent();
-
-        Facade::setFacadeApplication(['db' => $db]);
-        $this->migrate();
-        Facade::setFacadeApplication(null);
-
-        $this->seed();
-
-        Facade::setFacadeApplication(['db' => $db]);
-    }
-
-    /**
-     * Migrate the database.
-     *
-     * @return void
-     */
-    protected function migrate()
-    {
-        DB::schema()->dropAllTables();
+        Schema::dropAllTables();
         Schema::dropViewIfExists('all_comments');
         Schema::dropViewIfExists('all_posts');
         Schema::dropViewIfExists('all_taggables');
 
-        DB::schema()->create('users', function (Blueprint $table) {
+        Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
         });
 
-        DB::schema()->create('posts', function (Blueprint $table) {
+        Schema::create('posts', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('user_id');
         });
 
-        DB::schema()->create('comments', function (Blueprint $table) {
+        Schema::create('comments', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('post_id');
             $table->unsignedInteger('user_id');
@@ -66,29 +43,21 @@ abstract class TestCase extends Base
             $table->timestamps();
         });
 
-        DB::schema()->create('videos', function (Blueprint $table) {
+        Schema::create('videos', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
         });
 
-        DB::schema()->create('tags', function (Blueprint $table) {
+        Schema::create('tags', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
         });
 
-        DB::schema()->create('taggables', function (Blueprint $table) {
+        Schema::create('taggables', function (Blueprint $table) {
             $table->unsignedInteger('tag_id');
             $table->morphs('taggable');
         });
-    }
 
-    /**
-     * Seed the database.
-     *
-     * @return void
-     */
-    protected function seed()
-    {
         Model::unguard();
 
         User::create();
@@ -117,5 +86,19 @@ abstract class TestCase extends Base
         ]);
 
         Model::reguard();
+    }
+
+    protected function getEnvironmentSetUp($app)
+    {
+        $config = require __DIR__.'/config/database.php';
+
+        $app['config']->set('database.default', 'testing');
+
+        $app['config']->set('database.connections.testing', $config[getenv('DATABASE') ?: 'sqlite']);
+    }
+
+    protected function getPackageProviders($app)
+    {
+        return [DatabaseServiceProvider::class];
     }
 }

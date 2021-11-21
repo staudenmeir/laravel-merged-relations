@@ -32,7 +32,7 @@ class Builder extends Base
                 unset($item->$key);
             }
 
-            $models[] = (new $class)->hydrate([$item])[0];
+            $models[] = (new $class())->hydrate([$item])[0];
         }
 
         return $models;

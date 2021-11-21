@@ -12,7 +12,7 @@ class EloquentTest extends TestCase
 {
     public function testLazyLoading()
     {
-        Schema::createMergeView('all_taggables', [(new Tag)->posts(), (new Tag)->videos()]);
+        Schema::createMergeView('all_taggables', [(new Tag())->posts(), (new Tag())->videos()]);
 
         $allTaggables = Tag::first()->allTaggables;
         $this->assertInstanceOf(Post::class, $allTaggables[0]);
@@ -33,7 +33,7 @@ class EloquentTest extends TestCase
 
     public function testEagerLoading()
     {
-        Schema::createMergeView('all_taggables', [(new Tag)->posts(), (new Tag)->videos()]);
+        Schema::createMergeView('all_taggables', [(new Tag())->posts(), (new Tag())->videos()]);
 
         $tags = Tag::with('allTaggables')->get();
         $this->assertArrayNotHasKey('laravel_foreign_key', $tags[0]->allTaggables[0]);
@@ -41,16 +41,16 @@ class EloquentTest extends TestCase
 
     public function testCustomLocalKey()
     {
-        Schema::createMergeView('all_comments', [(new User)->comments(), (new User)->postComments()]);
+        Schema::createMergeView('all_comments', [(new User())->comments(), (new User())->postComments()]);
 
-        $user = (new User)->setAttribute('local_key', 1);
+        $user = (new User())->setAttribute('local_key', 1);
         $allComments = $user->mergedRelation('all_comments', 'local_key')->orderBy('id')->get();
         $this->assertEquals([1, 1, 2, 3, 4], $allComments->pluck('id')->all());
     }
 
     public function testWithModel()
     {
-        Schema::createMergeView('all_comments', [(new User)->comments(), (new User)->postComments()]);
+        Schema::createMergeView('all_comments', [(new User())->comments(), (new User())->postComments()]);
 
         $allComments = User::first()->allComments()->withCount('replies')->with('post')->get();
         $this->assertEquals(2, $allComments[0]->replies_count);
