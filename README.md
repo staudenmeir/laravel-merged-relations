@@ -156,6 +156,12 @@ In the original relationships, it's currently not possible to limit the selected
 
 In the merged relationships, it's not possible to remove global scopes like `SoftDeletes`. They can only be removed in the original relationships.
 
+### Testing
+
+If you use phpunit or a similar tool to run tests, add this property to your base test class to ensure that database views are dropped when the test database is cleaned up:
+
+`protected bool $dropViews = true;`
+
 ## Contributing
 
 Please see [CONTRIBUTING](.github/CONTRIBUTING.md) and [CODE OF CONDUCT](.github/CODE_OF_CONDUCT.md) for details.
