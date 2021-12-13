@@ -25,6 +25,7 @@ Use this command if you are in PowerShell on Windows (e.g. in VS Code):
 - [1. View](#1-view)
 - [2. Relationship](#2-relationship)
 - [Limitations](#limitations)
+- [Testing](#testing)
 
 ### Use Cases
 
@@ -40,12 +41,12 @@ class Tag extends Model
 
     public function posts()
     {
-        return $this->morphedByMany('App\Post', 'taggable');
+        return $this->morphedByMany(Post::class, 'taggable');
     }
 
     public function videos()
     {
-        return $this->morphedByMany('App\Video', 'taggable');
+        return $this->morphedByMany(Video::class, 'taggable');
     }
 }
 ```
@@ -62,12 +63,12 @@ class User extends Model
 
     public function comments()
     {
-        return $this->hasMany('App\Comment');
+        return $this->hasMany(Comment::class);
     }
 
     public function postComments()
     {
-        return $this->hasManyThrough('App\Comment', 'App\Post');
+        return $this->hasManyThrough(Comment::class, Post::class);
     }
 }
 ```
@@ -79,7 +80,10 @@ Before you can define the new relationship, you need to create the merge view in
 ```php
 use Staudenmeir\LaravelMergedRelations\Facades\Schema;
 
-Schema::createMergeView('all_taggables', [(new Tag)->posts(), (new Tag)->videos()]);
+Schema::createMergeView(
+    'all_taggables',
+    [(new Tag)->posts(), (new Tag)->videos()]
+);
 ```
 
 By default, the view doesn't remove duplicates. Use `createMergeViewWithoutDuplicates()` to get unique results:
@@ -87,7 +91,10 @@ By default, the view doesn't remove duplicates. Use `createMergeViewWithoutDupli
 ```php
 use Staudenmeir\LaravelMergedRelations\Facades\Schema;
 
-Schema::createMergeViewWithoutDuplicates('all_comments', [(new User)->comments(), (new User)->postComments()]);
+Schema::createMergeViewWithoutDuplicates(
+    'all_comments',
+    [(new User)->comments(), (new User)->postComments()]
+);
 ```
 
 You can also replace an existing view:
@@ -95,7 +102,10 @@ You can also replace an existing view:
 ```php
 use Staudenmeir\LaravelMergedRelations\Facades\Schema;
 
-Schema::createOrReplaceMergeView('all_comments', [(new User)->comments(), (new User)->postComments()]);
+Schema::createOrReplaceMergeView(
+    'all_comments',
+    [(new User)->comments(), (new User)->postComments()]
+);
 ```
 
 The package includes [staudenmeir/laravel-migration-views](https://github.com/staudenmeir/laravel-migration-views). You can use its methods to rename and drop views:
@@ -137,7 +147,7 @@ class User extends Model
 
     public function allComments()
     {
-        return $this->mergedRelationWithModel('App\Comment', 'all_comments');
+        return $this->mergedRelationWithModel(Comment::class, 'all_comments');
     }
 }
 ```
@@ -158,9 +168,11 @@ In the merged relationships, it's not possible to remove global scopes like `Sof
 
 ### Testing
 
-If you use phpunit or a similar tool to run tests, add this property to your base test class to ensure that database views are dropped when the test database is cleaned up:
+If you use PHPUnit or a similar tool to run tests, add this property to your base test class to ensure that database views are dropped when the test database is cleaned up:
 
-`protected bool $dropViews = true;`
+```php
+protected bool $dropViews = true;
+```
 
 ## Contributing
 
