@@ -2,6 +2,8 @@
 
 namespace Tests;
 
+use Illuminate\Database\Capsule\Manager as DB;
+use Illuminate\Database\Eloquent\Collection;
 use Staudenmeir\LaravelMergedRelations\Facades\Schema;
 use Tests\Models\Post;
 use Tests\Models\Tag;
@@ -31,11 +33,24 @@ class EloquentTest extends TestCase
         $this->assertTrue($allTaggables[0]->relationLoaded('user'));
     }
 
+    public function testEmptyLazyLoading()
+    {
+        Schema::createMergeView('all_taggables', [(new Tag())->posts(), (new Tag())->videos()]);
+
+        DB::enableQueryLog();
+
+        $allTaggables = (new Tag())->allTaggables;
+
+        $this->assertInstanceOf(Collection::class, $allTaggables);
+        $this->assertEmpty(DB::getQueryLog());
+    }
+
     public function testEagerLoading()
     {
         Schema::createMergeView('all_taggables', [(new Tag)->posts(), (new Tag)->videos()]);
 
         $tags = Tag::with('allTaggables')->get();
+
         $this->assertArrayNotHasKey('laravel_foreign_key', $tags[0]->allTaggables[0]);
     }
 
@@ -45,6 +60,7 @@ class EloquentTest extends TestCase
 
         $user = (new User)->setAttribute('local_key', 1);
         $allComments = $user->mergedRelation('all_comments', 'local_key')->orderBy('id')->get();
+
         $this->assertEquals([1, 1, 2, 3, 4], $allComments->pluck('id')->all());
     }
 
@@ -53,7 +69,41 @@ class EloquentTest extends TestCase
         Schema::createMergeView('all_comments', [(new User)->comments(), (new User)->postComments()]);
 
         $allComments = User::first()->allComments()->withCount('replies')->with('post')->get();
+
         $this->assertEquals(2, $allComments[0]->replies_count);
         $this->assertTrue($allComments[0]->relationLoaded('post'));
+    }
+
+    public function testGet()
+    {
+        Schema::createMergeView('all_taggables', [(new Tag())->posts(), (new Tag())->videos()]);
+
+        $allTaggables = Tag::first()->allTaggables()->get(['id']);
+
+        $this->assertEquals([1, 2], $allTaggables->pluck('id')->all());
+        $this->assertArrayHasKey('laravel_foreign_key', $allTaggables[1]);
+        $this->assertArrayNotHasKey('user_id', $allTaggables[1]->getAttributes());
+    }
+
+    public function testFirst()
+    {
+        Schema::createMergeView('all_taggables', [(new Tag())->posts(), (new Tag())->videos()]);
+
+        $taggable = Tag::first()->allTaggables()->first(['id']);
+
+        $this->assertEquals(1, $taggable->id);
+        $this->assertArrayHasKey('laravel_foreign_key', $taggable);
+        $this->assertArrayNotHasKey('user_id', $taggable->getAttributes());
+    }
+
+    public function testPaginate()
+    {
+        Schema::createMergeView('all_taggables', [(new Tag())->posts(), (new Tag())->videos()]);
+
+        $allTaggables = Tag::first()->allTaggables()->paginate(null, ['id']);
+
+        $this->assertEquals([1, 2], $allTaggables->pluck('id')->all());
+        $this->assertArrayHasKey('laravel_foreign_key', $allTaggables[1]);
+        $this->assertArrayNotHasKey('user_id', $allTaggables[1]->getAttributes());
     }
 }
