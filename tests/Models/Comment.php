@@ -11,7 +11,7 @@ class Comment extends Model
 
     public function allPosts()
     {
-        return $this->mergedRelation('all_posts', 'post_id');
+        return $this->mergedRelation('all_posts');
     }
 
     public function post()

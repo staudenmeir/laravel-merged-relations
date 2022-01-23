@@ -77,13 +77,40 @@ trait CreatesMergeViews
     protected function removeConstraints(array $relations)
     {
         foreach ($relations as $relation) {
-            $foreignKey = $this->getForeignKey($relation);
+            $foreignKey = $this->getOriginalForeignKey($relation);
 
             $relation->getQuery()->getQuery()->wheres = collect($relation->getQuery()->getQuery()->wheres)
                 ->reject(function ($where) use ($foreignKey) {
                     return $where['column'] === $foreignKey;
                 })->values()->all();
         }
+    }
+
+    /**
+     * Get the foreign key of the original relationship.
+     *
+     * @param \Illuminate\Database\Eloquent\Relations\Relation $relation
+     * @return string
+     */
+    protected function getOriginalForeignKey(Relation $relation)
+    {
+        if ($relation instanceof BelongsTo) {
+            return $relation->getQualifiedOwnerKeyName();
+        }
+
+        if ($relation instanceof BelongsToMany) {
+            return $relation->getQualifiedForeignPivotKeyName();
+        }
+
+        if ($relation instanceof HasManyThrough) {
+            return $relation->getQualifiedFirstKeyName();
+        }
+
+        if ($relation instanceof HasOneOrMany) {
+            return $relation->getQualifiedForeignKeyName();
+        }
+
+        throw new RuntimeException('This type of relationship is not supported.'); // @codeCoverageIgnore
     }
 
     /**
@@ -105,12 +132,12 @@ trait CreatesMergeViews
 
         $query = null;
 
-        foreach ($relations as $i => $relation) {
+        foreach ($relations as $relation) {
             $relationQuery = $relation->getQuery();
 
             $from = $relationQuery->getQuery()->from;
 
-            $foreignKey = $this->getForeignKey($relation);
+            $foreignKey = $this->getMergedForeignKey($relation);
 
             $placeholders = [];
 
@@ -128,6 +155,8 @@ trait CreatesMergeViews
                 ->selectRaw($pdo->quote(get_class($relation->getRelated())).' as laravel_model')
                 ->selectRaw($pdo->quote(implode(',', $placeholders)).' as laravel_placeholders')
                 ->selectRaw($pdo->quote(implode(',', array_keys($relationQuery->getEagerLoads()))).' as laravel_with');
+
+            $this->addRelationQueryConstraints($relation);
 
             if (!$query) {
                 $query = $relationQuery;
@@ -163,29 +192,36 @@ trait CreatesMergeViews
     }
 
     /**
-     * Get the foreign key of a relationship.
+     * Get the foreign key for the merged relationship.
      *
      * @param \Illuminate\Database\Eloquent\Relations\Relation $relation
      * @return string
      */
-    protected function getForeignKey(Relation $relation)
+    protected function getMergedForeignKey(Relation $relation)
     {
         if ($relation instanceof BelongsTo) {
-            return $relation->getQualifiedOwnerKeyName();
+            return $relation->getQualifiedParentKeyName();
         }
 
-        if ($relation instanceof BelongsToMany) {
-            return $relation->getQualifiedForeignPivotKeyName();
-        }
+        return $this->getOriginalForeignKey($relation);
+    }
 
-        if ($relation instanceof HasManyThrough) {
-            return $relation->getQualifiedFirstKeyName();
+    /**
+     * Add relation-specific constraints to query.
+     *
+     * @param \Illuminate\Database\Eloquent\Relations\Relation $relation
+     * @return void
+     */
+    protected function addRelationQueryConstraints(Relation $relation)
+    {
+        if ($relation instanceof BelongsTo) {
+            $relation->getQuery()->distinct()
+                          ->join(
+                              $relation->getParent()->getTable(),
+                              $relation->getQualifiedForeignKeyName(),
+                              '=',
+                              $relation->getQualifiedOwnerKeyName()
+                          );
         }
-
-        if ($relation instanceof HasOneOrMany) {
-            return $relation->getQualifiedForeignKeyName();
-        }
-
-        throw new RuntimeException('This type of relationship is not supported.'); // @codeCoverageIgnore
     }
 }
