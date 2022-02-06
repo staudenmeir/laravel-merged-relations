@@ -207,7 +207,7 @@ trait CreatesMergeViews
     }
 
     /**
-     * Add relation-specific constraints to query.
+     * Add relation-specific constraints to the query.
      *
      * @param \Illuminate\Database\Eloquent\Relations\Relation $relation
      * @return void
