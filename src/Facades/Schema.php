@@ -3,12 +3,12 @@
 namespace Staudenmeir\LaravelMergedRelations\Facades;
 
 use Illuminate\Database\Connection;
+use Illuminate\Support\Facades\Facade;
 use RuntimeException;
 use Staudenmeir\LaravelMergedRelations\Schema\Builders\MySqlBuilder;
 use Staudenmeir\LaravelMergedRelations\Schema\Builders\PostgresBuilder;
 use Staudenmeir\LaravelMergedRelations\Schema\Builders\SQLiteBuilder;
 use Staudenmeir\LaravelMergedRelations\Schema\Builders\SqlServerBuilder;
-use Staudenmeir\LaravelMigrationViews\Facades\Schema as Base;
 use Staudenmeir\LaravelMigrationViews\Schema\Grammars\MySqlGrammar;
 use Staudenmeir\LaravelMigrationViews\Schema\Grammars\PostgresGrammar;
 use Staudenmeir\LaravelMigrationViews\Schema\Grammars\SQLiteGrammar;
@@ -20,8 +20,18 @@ use Staudenmeir\LaravelMigrationViews\Schema\Grammars\SqlServerGrammar;
  * @method static void createOrReplaceMergeView(string $name, array $relations, bool $duplicates = true)
  * @method static void createOrReplaceMergeViewWithoutDuplicates(string $name, array $relations)
  */
-class Schema extends Base
+class Schema extends Facade
 {
+    /**
+     * Get the registered name of the component.
+     *
+     * @return string
+     */
+    protected static function getFacadeAccessor()
+    {
+        return static::class;
+    }
+
     /**
      * Get a schema builder instance for a connection.
      *

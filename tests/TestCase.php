@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Orchestra\Testbench\TestCase as Base;
 use Staudenmeir\LaravelMergedRelations\DatabaseServiceProvider;
 use Staudenmeir\LaravelMergedRelations\Facades\Schema;
+use Staudenmeir\LaravelMigrationViews\DatabaseServiceProvider as MigrationViewsDatabaseServiceProvider;
 use Tests\Models\Comment;
 use Tests\Models\Post;
 use Tests\Models\Tag;
@@ -99,6 +100,9 @@ abstract class TestCase extends Base
 
     protected function getPackageProviders($app)
     {
-        return [DatabaseServiceProvider::class];
+        return [
+            DatabaseServiceProvider::class,
+	        MigrationViewsDatabaseServiceProvider::class,
+        ];
     }
 }
