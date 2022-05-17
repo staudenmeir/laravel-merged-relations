@@ -102,7 +102,7 @@ abstract class TestCase extends Base
     {
         return [
             DatabaseServiceProvider::class,
-	        MigrationViewsDatabaseServiceProvider::class,
+            MigrationViewsDatabaseServiceProvider::class,
         ];
     }
 }

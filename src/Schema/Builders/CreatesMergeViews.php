@@ -153,10 +153,12 @@ trait CreatesMergeViews
                 }
             }
 
+            $with = array_keys($relationQuery->getEagerLoads());
+
             $relationQuery->selectRaw($grammar->wrap($foreignKey).' as laravel_foreign_key')
                 ->selectRaw($pdo->quote($model).' as laravel_model')
                 ->selectRaw($pdo->quote(implode(',', $placeholders)).' as laravel_placeholders')
-                ->selectRaw($pdo->quote(implode(',', array_keys($relationQuery->getEagerLoads()))).' as laravel_with');
+                ->selectRaw($pdo->quote(implode(',', $with)).' as laravel_with');
 
             $this->addRelationQueryConstraints($relation);
 
