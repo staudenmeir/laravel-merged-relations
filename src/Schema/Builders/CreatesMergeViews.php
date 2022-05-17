@@ -139,6 +139,8 @@ trait CreatesMergeViews
 
             $foreignKey = $this->getMergedForeignKey($relation);
 
+            $model = $relation->getRelated()->getMorphClass();
+
             $placeholders = [];
 
             foreach ($allColumns as $column) {
@@ -152,7 +154,7 @@ trait CreatesMergeViews
             }
 
             $relationQuery->selectRaw($grammar->wrap($foreignKey).' as laravel_foreign_key')
-                ->selectRaw($pdo->quote(get_class($relation->getRelated())).' as laravel_model')
+                ->selectRaw($pdo->quote($model).' as laravel_model')
                 ->selectRaw($pdo->quote(implode(',', $placeholders)).' as laravel_placeholders')
                 ->selectRaw($pdo->quote(implode(',', array_keys($relationQuery->getEagerLoads()))).' as laravel_with');
 

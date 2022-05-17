@@ -4,6 +4,7 @@ namespace Staudenmeir\LaravelMergedRelations\Eloquent;
 
 use Illuminate\Database\Eloquent\Builder as Base;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Relations\Relation;
 
 class Builder extends Base
 {
@@ -20,7 +21,7 @@ class Builder extends Base
         $models = [];
 
         foreach ($items as $item) {
-            $class = $item->laravel_model;
+            $class = Relation::getMorphedModel($item->laravel_model) ?? $item->laravel_model;
 
             $unset = ['laravel_model', 'laravel_placeholders'];
 
