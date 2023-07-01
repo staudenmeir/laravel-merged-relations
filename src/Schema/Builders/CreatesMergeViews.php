@@ -207,6 +207,10 @@ trait CreatesMergeViews
             return $relation->getQualifiedParentKeyName();
         }
 
+        if ($this->isHasManyDeepRelationWithLeadingBelongsTo($relation)) {
+            return $relation->getFarParent()->getQualifiedKeyName();
+        }
+
         return $this->getOriginalForeignKey($relation);
     }
 
@@ -227,5 +231,27 @@ trait CreatesMergeViews
                               $relation->getQualifiedOwnerKeyName()
                           );
         }
+
+        if ($this->isHasManyDeepRelationWithLeadingBelongsTo($relation)) {
+            $relation->getQuery()
+                     ->join(
+                         $relation->getFarParent()->getTable(),
+                         $relation->getQualifiedLocalKeyName(),
+                         '=',
+                         $relation->getQualifiedFirstKeyName()
+                     );
+        }
+    }
+
+    /**
+     * Determine if the relationship is a HasManyDeep relationship that starts with a BelongsTo relationship.
+     *
+     * @param \Illuminate\Database\Eloquent\Relations\Relation $relation
+     * @return bool
+     */
+    protected function isHasManyDeepRelationWithLeadingBelongsTo(Relation $relation): bool
+    {
+        return is_a($relation, 'Staudenmeir\EloquentHasManyDeep\HasManyDeep', true) &&
+            $relation->getFirstKeyName() === $relation->getParent()->getKeyName();
     }
 }

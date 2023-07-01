@@ -5,6 +5,7 @@ namespace Tests;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Staudenmeir\LaravelMergedRelations\Facades\Schema;
+use Tests\Models\Comment;
 use Tests\Models\Post;
 use Tests\Models\Tag;
 use Tests\Models\User;
@@ -105,5 +106,14 @@ class EloquentTest extends TestCase
         $this->assertEquals([1, 2], $allTaggables->pluck('id')->all());
         $this->assertArrayHasKey('laravel_foreign_key', $allTaggables[1]);
         $this->assertArrayNotHasKey('user_id', $allTaggables[1]->getAttributes());
+    }
+
+    public function testHasManyDeepRelationWithLeadingBelongsTo()
+    {
+        Schema::createMergeView('all_users', [(new Comment())->postUser(), (new Comment())->user()]);
+
+        $allUsers = Comment::find(2)->allUsers;
+
+        $this->assertEquals([1, 2], $allUsers->pluck('id')->all());
     }
 }

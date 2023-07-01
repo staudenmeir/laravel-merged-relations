@@ -15,7 +15,8 @@
     },
     "require-dev": {
         "orchestra/testbench": "^7.0",
-        "nesbot/carbon": "^2.62.1"
+        "nesbot/carbon": "^2.62.1",
+        "staudenmeir/eloquent-has-many-deep": "^1.17"
     },
     "autoload": {
         "psr-4": {
