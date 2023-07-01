@@ -25,6 +25,7 @@ abstract class TestCase extends Base
         Schema::dropViewIfExists('all_comments');
         Schema::dropViewIfExists('all_posts');
         Schema::dropViewIfExists('all_taggables');
+        Schema::dropViewIfExists('all_users');
 
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
@@ -61,6 +62,7 @@ abstract class TestCase extends Base
 
         Model::unguard();
 
+        User::create();
         User::create();
         User::create();
 
