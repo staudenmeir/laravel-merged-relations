@@ -16,7 +16,8 @@
     "require-dev": {
         "orchestra/testbench": "^8.0",
         "phpunit/phpunit": "^10.0",
-        "staudenmeir/eloquent-has-many-deep": "^1.18"
+        "staudenmeir/eloquent-has-many-deep": "^1.18",
+        "phpstan/phpstan": "^1.10"
     },
     "autoload": {
         "psr-4": {
