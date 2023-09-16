@@ -15,7 +15,7 @@
     },
     "require-dev": {
         "orchestra/testbench": "^8.0",
-        "phpunit/phpunit": "^10.0",
+        "phpunit/phpunit": "^10.1",
         "staudenmeir/eloquent-has-many-deep": "^1.18",
         "phpstan/phpstan": "^1.10"
     },
