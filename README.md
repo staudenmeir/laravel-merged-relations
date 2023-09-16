@@ -1,11 +1,12 @@
-![CI](https://github.com/staudenmeir/laravel-merged-relations/workflows/CI/badge.svg)
+# Laravel Merged Relations
+
+[![CI](https://github.com/staudenmeir/laravel-merged-relations/actions/workflows/ci.yml/badge.svg)](https://github.com/staudenmeir/laravel-merged-relations/actions/workflows/ci.yml)
 [![Code Coverage](https://scrutinizer-ci.com/g/staudenmeir/laravel-merged-relations/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/staudenmeir/laravel-merged-relations/?branch=master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/staudenmeir/laravel-merged-relations/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/staudenmeir/laravel-merged-relations/?branch=master)
 [![Latest Stable Version](https://poser.pugx.org/staudenmeir/laravel-merged-relations/v/stable)](https://packagist.org/packages/staudenmeir/laravel-merged-relations)
-[![Total Downloads](https://poser.pugx.org/staudenmeir/laravel-merged-relations/downloads)](https://packagist.org/packages/staudenmeir/laravel-merged-relations)
-[![License](https://poser.pugx.org/staudenmeir/laravel-merged-relations/license)](https://packagist.org/packages/staudenmeir/laravel-merged-relations)
+[![Total Downloads](https://poser.pugx.org/staudenmeir/laravel-merged-relations/downloads)](https://packagist.org/packages/staudenmeir/laravel-merged-relations/stats)
+[![License](https://poser.pugx.org/staudenmeir/laravel-merged-relations/license)](https://github.com/staudenmeir/laravel-merged-relations/blob/master/LICENSE)
 
-## Introduction
 This Laravel Eloquent extension allows merging multiple relationships using SQL views.  
 The relationships can target the same or different related models.
 
@@ -18,6 +19,18 @@ Supports Laravel 5.5.25+.
 Use this command if you are in PowerShell on Windows (e.g. in VS Code):
 
     composer require staudenmeir/laravel-merged-relations:"^^^^1.0"
+
+## Versions
+
+| Laravel | Package |
+|:--------|:--------|
+| 10.x    | 1.6     |
+| 9.x     | 1.5     |
+| 8.x     | 1.4     |
+| 7.x     | 1.3     |
+| 6.x     | 1.2     |
+| 5.8     | 1.1     |
+| 5.5–5.7 | 1.0     |
 
 ## Usage
 
