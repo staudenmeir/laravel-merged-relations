@@ -126,7 +126,7 @@ trait CreatesMergeViews
 
         $pdo = $this->connection->getPdo();
 
-        $columns = $this->getColumns($relations);
+        $columns = $this->getRelationshipColumns($relations);
 
         $allColumns = array_unique(array_merge(...array_values($columns)));
 
@@ -178,7 +178,7 @@ trait CreatesMergeViews
      * @param \Illuminate\Database\Eloquent\Relations\Relation[] $relations
      * @return array
      */
-    protected function getColumns(array $relations)
+    protected function getRelationshipColumns(array $relations)
     {
         $columns = [];
 
