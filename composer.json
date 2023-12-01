@@ -15,9 +15,9 @@
     },
     "require-dev": {
         "orchestra/testbench": "^8.0",
+        "phpstan/phpstan": "^1.10",
         "phpunit/phpunit": "^10.1",
-        "staudenmeir/eloquent-has-many-deep": "^1.18",
-        "phpstan/phpstan": "^1.10"
+        "staudenmeir/eloquent-has-many-deep": "^1.18"
     },
     "autoload": {
         "psr-4": {
@@ -37,5 +37,8 @@
         }
     },
     "minimum-stability": "dev",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "config": {
+        "sort-packages": true
+    }
 }
