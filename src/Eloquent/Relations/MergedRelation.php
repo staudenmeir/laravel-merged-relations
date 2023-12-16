@@ -14,7 +14,7 @@ class MergedRelation extends HasMany
      */
     public function getResults()
     {
-        $results = ! is_null($this->getParentKey())
+        $results = !is_null($this->getParentKey())
             ? $this->get()
             : $this->related->newCollection();
 
