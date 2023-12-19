@@ -27,7 +27,8 @@ class MergedRelationsHook implements ModelHookInterface
         $methods = (new ReflectionClass($model))->getMethods(ReflectionMethod::IS_PUBLIC);
 
         foreach ($methods as $method) {
-            if ($method->isStatic() || $method->getNumberOfParameters() > 0) {
+            if ($method->isAbstract() || $method->isStatic() || !$method->isPublic()
+                || $method->getNumberOfParameters() > 0 || $method->getDeclaringClass()->getName() === Model::class) {
                 continue;
             }
 
