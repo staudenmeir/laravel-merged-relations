@@ -10,7 +10,7 @@
 This Laravel Eloquent extension allows merging multiple relationships using SQL views.  
 The relationships can target the same or different related models.
 
-Supports Laravel 5.5.25+.
+Supports Laravel 5.5+.
  
 ## Installation
 
