@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOneOrMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use RuntimeException;
+use Staudenmeir\EloquentHasManyDeep\HasManyDeep;
 
 trait CreatesMergeViews
 {
@@ -251,7 +252,7 @@ trait CreatesMergeViews
      */
     protected function isHasManyDeepRelationWithLeadingBelongsTo(Relation $relation): bool
     {
-        return is_a($relation, 'Staudenmeir\EloquentHasManyDeep\HasManyDeep', true) &&
-            $relation->getFirstKeyName() === $relation->getParent()->getKeyName();
+        return $relation instanceof HasManyDeep
+            && $relation->getFirstKeyName() === $relation->getParent()->getKeyName();
     }
 }

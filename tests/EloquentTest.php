@@ -18,6 +18,7 @@ class EloquentTest extends TestCase
         Schema::createMergeView('all_taggables', [(new Tag())->posts(), (new Tag())->videos()]);
 
         $allTaggables = Tag::first()->allTaggables;
+
         $this->assertInstanceOf(Post::class, $allTaggables[0]);
         $this->assertInstanceOf(Video::class, $allTaggables[1]);
         $this->assertArrayHasKey('user_id', $allTaggables[0]);
