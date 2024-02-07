@@ -35,8 +35,8 @@ Use this command if you are in PowerShell on Windows (e.g. in VS Code):
 ## Usage
 
 - [Use Cases](#use-cases)
-- [1. View](#1-view)
-- [2. Relationship](#2-relationship)
+- [Step 1: Creating Views](#step-1-creating-views)
+- [Step 2: Defining Relationships](#step-2-defining-relationships)
 - [Limitations](#limitations)
 - [Testing](#testing)
 
@@ -86,7 +86,7 @@ class User extends Model
 }
 ```
 
-### 1. View
+### Step 1: Creating Views
 
 Before you can define the new relationship, you need to create the merge view in a migration:
 
@@ -133,7 +133,7 @@ Schema::dropView('all_comments');
 
 If you are using `php artisan migrate:fresh`, you can drop all views with `--drop-views` (Laravel 5.6.26+).
 
-### 2. Relationship
+### Step 2: Defining Relationships
 
 With the view created, you can define the merged relationship.
 
