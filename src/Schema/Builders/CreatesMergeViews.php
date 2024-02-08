@@ -129,6 +129,8 @@ trait CreatesMergeViews
 
         $columns = $this->getRelationshipColumns($relations);
 
+        $pivotTables = $this->getPivotTables($relations);
+
         $allColumns = array_unique(array_merge(...array_values($columns)));
 
         $query = null;
@@ -151,6 +153,14 @@ trait CreatesMergeViews
                     $relationQuery->selectRaw('null as '.$grammar->wrap($column));
 
                     $placeholders[] = $column;
+                }
+            }
+
+            foreach ($pivotTables as $pivotTable) {
+                foreach ($pivotTable['columns'] as $column) {
+                    $alias = "__{$pivotTable['table']}__{$pivotTable['accessor']}__$column";
+
+                    $relationQuery->addSelect("{$pivotTable['table']}.$column as $alias");
                 }
             }
 
@@ -194,6 +204,56 @@ trait CreatesMergeViews
         }
 
         return $columns;
+    }
+
+    /**
+     * Get the pivot tables that are requested by all relationships.
+     *
+     * @param array $relations
+     * @return array
+     */
+    protected function getPivotTables(array $relations): array
+    {
+        $tables = [];
+
+        foreach ($relations as $i => $relation) {
+            if ($relation instanceof BelongsToMany) {
+                $pivotColumns = $relation->getPivotColumns();
+
+                if ($pivotColumns) {
+                    $tables[$i][] = [
+                        'accessor' => $relation->getPivotAccessor(),
+                        'columns' => $pivotColumns,
+                        'table' => $relation->getTable(),
+                    ];
+                }
+            } elseif($relation instanceof HasManyDeep) {
+                $intermediateTables = $relation->getIntermediateTables();
+
+                foreach ($intermediateTables as $accessor => $table) {
+                    $tables[$i][] = [
+                        'accessor' => $accessor,
+                        'columns' => $table['columns'],
+                        'table' => $table['table'],
+                    ];
+                }
+            }
+        }
+
+        if (count($tables) === count($relations)) {
+            $hashes = array_map(
+                fn (array $table) => serialize($table),
+                $tables
+            );
+
+            $uniqueHashes = array_unique($hashes);
+
+            if (count($uniqueHashes) === 1) {
+                return $tables[0];
+            }
+        }
+
+        return [];
     }
 
     /**

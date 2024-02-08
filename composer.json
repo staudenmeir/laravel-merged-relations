@@ -18,7 +18,7 @@
         "orchestra/testbench": "^8.0",
         "phpstan/phpstan": "^1.10",
         "phpunit/phpunit": "^10.1",
-        "staudenmeir/eloquent-has-many-deep": "^1.18"
+        "staudenmeir/eloquent-has-many-deep": "^1.19.3"
     },
     "autoload": {
         "psr-4": {

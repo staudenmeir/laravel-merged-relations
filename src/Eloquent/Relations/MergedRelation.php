@@ -4,6 +4,7 @@ namespace Staudenmeir\LaravelMergedRelations\Eloquent\Relations;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class MergedRelation extends HasMany
 {
@@ -41,6 +42,8 @@ class MergedRelation extends HasMany
             $models = $builder->eagerLoadRelations($models);
         }
 
+        $this->hydratePivotRelations($models);
+
         return $this->related->newCollection($models);
     }
 
@@ -72,7 +75,13 @@ class MergedRelation extends HasMany
             $this->shouldSelect($columns)
         );
 
-        return $this->query->paginate($perPage, $columns, $pageName, $page);
+        $paginator = $this->query->paginate($perPage, $columns, $pageName, $page);
+
+        $this->hydratePivotRelations(
+            $paginator->items()
+        );
+
+        return $paginator;
     }
 
     /**
@@ -108,6 +117,73 @@ class MergedRelation extends HasMany
             $columns,
             ['laravel_foreign_key', 'laravel_model', 'laravel_placeholders', 'laravel_with']
         );
+    }
+
+    /**
+     * Hydrate the pivot table relationships on the models.
+     *
+     * @param array $models
+     * @return void
+     */
+    protected function hydratePivotRelations(array $models): void
+    {
+        if (!$models) {
+            return;
+        }
+
+        $pivotTables = $this->getPivotTables($models);
+
+        if (!$pivotTables) {
+            return;
+        }
+
+        foreach ($models as $model) {
+            $attributes = $model->getAttributes();
+
+            foreach ($pivotTables as $accessor => $table) {
+                $pivotAttributes = [];
+
+                foreach ($table['columns'] as $column) {
+                    $key = "__{$table['table']}__{$accessor}__$column";
+
+                    $pivotAttributes[$column] = $attributes[$key];
+
+                    unset($model->$key);
+                }
+
+                $relation = Pivot::fromAttributes($model, $pivotAttributes, $table['table'], true);
+
+                $model->setRelation($accessor, $relation);
+            }
+        }
+    }
+
+    /**
+     * Get the pivot tables from the models.
+     *
+     * @param array $models
+     * @return array
+     */
+    protected function getPivotTables(array $models): array
+    {
+        $tables = [];
+
+        foreach (array_keys($models[0]->getAttributes()) as $key) {
+            if (str_starts_with($key, '__')) {
+                [, $table, $accessor, $column] = explode('__', $key);
+
+                if (isset($tables[$accessor])) {
+                    $tables[$accessor]['columns'][] = $column;
+                } else {
+                    $tables[$accessor] = [
+                        'columns' => [$column],
+                        'table' => $table,
+                    ];
+                }
+            }
+        }
+
+        return $tables;
     }
 
     /**

@@ -37,6 +37,7 @@ Use this command if you are in PowerShell on Windows (e.g. in VS Code):
 - [Use Cases](#use-cases)
 - [Step 1: Creating Views](#step-1-creating-views)
 - [Step 2: Defining Relationships](#step-2-defining-relationships)
+- [Pivot Table Data](#pivot-table-data)
 - [Limitations](#limitations)
 - [Testing](#testing)
 
@@ -175,10 +176,32 @@ $taggables = Tag::find($id)->allTaggables()->latest()->paginate();
 $users = User::with('allComments')->get();
 ```
 
+### Pivot Table Data
+
+You can retrieve additional pivot columns when your merge view consists of many-to-many relationships. Add the desired
+pivot columns to _all_ relationships:
+
+```php
+use Staudenmeir\LaravelMergedRelations\Facades\Schema;
+
+Schema::createMergeView(
+    'all_taggables',
+    [
+        (new Tag)->posts()->withPivot('tagged_at'),
+        (new Tag)->videos()->withPivot('tagged_at'),
+    ]
+);
+
+$taggables = Tag::find($id)->allTaggables;
+
+foreach ($taggables as $taggable) {
+    dump($taggable->pivot->tagged_at);
+}
+```
+
 ### Limitations
 
-In the original relationships, it's currently not possible to limit the selected columns or add new columns (e.g.
-using `withCount()`, `withPivot()`).
+In the original relationships, it's currently not possible to limit the selected columns or apply `withCount()`.
 
 In the merged relationships, it's not possible to remove global scopes like `SoftDeletes`. They can only be removed in
 the original relationships.

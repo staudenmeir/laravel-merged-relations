@@ -58,6 +58,8 @@ abstract class TestCase extends Base
         Schema::create('taggables', function (Blueprint $table) {
             $table->unsignedInteger('tag_id');
             $table->morphs('taggable');
+            $table->string('label');
+            $table->boolean('active');
         });
 
         Model::unguard();
@@ -82,10 +84,10 @@ abstract class TestCase extends Base
         Tag::create();
 
         DB::table('taggables')->insert([
-            ['tag_id' => 1, 'taggable_type' => Post::class, 'taggable_id' => 1],
-            ['tag_id' => 1, 'taggable_type' => Video::class, 'taggable_id' => 2],
-            ['tag_id' => 2, 'taggable_type' => Post::class, 'taggable_id' => 2],
-            ['tag_id' => 2, 'taggable_type' => Video::class, 'taggable_id' => 1],
+            ['tag_id' => 1, 'taggable_type' => Post::class, 'taggable_id' => 1, 'label' => 'a', 'active' => true],
+            ['tag_id' => 1, 'taggable_type' => Video::class, 'taggable_id' => 2, 'label' => 'b', 'active' => false],
+            ['tag_id' => 2, 'taggable_type' => Post::class, 'taggable_id' => 2, 'label' => 'c', 'active' => true],
+            ['tag_id' => 2, 'taggable_type' => Video::class, 'taggable_id' => 1, 'label' => 'd', 'active' => false],
         ]);
 
         Model::reguard();
