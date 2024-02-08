@@ -133,7 +133,7 @@ Schema::renameView('all_comments', 'user_comments');
 Schema::dropView('all_comments');
 ```
 
-If you are using `php artisan migrate:fresh`, you can drop all views with `--drop-views` (Laravel 5.6.26+).
+If you are using `php artisan migrate:fresh`, you can drop all views with `--drop-views`.
 
 ### Step 2: Defining Relationships
 
@@ -178,8 +178,9 @@ $users = User::with('allComments')->get();
 
 ### Pivot Table Data
 
-You can retrieve additional pivot columns when your merge view consists of many-to-many relationships. Add the desired
-pivot columns to _all_ relationships:
+You can retrieve additional pivot columns if your merge view consists of many-to-many relationships.
+
+Add the desired pivot columns to _all_ relationships:
 
 ```php
 use Staudenmeir\LaravelMergedRelations\Facades\Schema;
