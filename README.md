@@ -11,7 +11,7 @@ This Laravel Eloquent extension allows merging multiple relationships using SQL 
 The relationships can target the same or different related models.
 
 Supports Laravel 5.5+.
- 
+
 ## Installation
 
     composer require staudenmeir/laravel-merged-relations:"^1.0"
@@ -121,7 +121,8 @@ Schema::createOrReplaceMergeView(
 );
 ```
 
-The package includes [staudenmeir/laravel-migration-views](https://github.com/staudenmeir/laravel-migration-views). You can use its methods to rename and drop views:
+The package includes [staudenmeir/laravel-migration-views](https://github.com/staudenmeir/laravel-migration-views). You
+can use its methods to rename and drop views:
 
 ```php
 use Staudenmeir\LaravelMergedRelations\Facades\Schema;
@@ -151,7 +152,8 @@ class Tag extends Model
 }
 ```
 
-If all original relationships target the same related model, you can use `mergedRelationWithModel()`. This allows you to access local scopes and use methods like `whereHas()` or `withCount()`: 
+If all original relationships target the same related model, you can use `mergedRelationWithModel()`. This allows you to
+access local scopes and use methods like `whereHas()` or `withCount()`:
 
 ```php
 class User extends Model
@@ -175,13 +177,16 @@ $users = User::with('allComments')->get();
 
 ### Limitations
 
-In the original relationships, it's currently not possible to limit the selected columns or add new columns (e.g. using `withCount()`, `withPivot()`).
+In the original relationships, it's currently not possible to limit the selected columns or add new columns (e.g.
+using `withCount()`, `withPivot()`).
 
-In the merged relationships, it's not possible to remove global scopes like `SoftDeletes`. They can only be removed in the original relationships.
+In the merged relationships, it's not possible to remove global scopes like `SoftDeletes`. They can only be removed in
+the original relationships.
 
 ### Testing
 
-If you use PHPUnit or a similar tool to run tests, add this property to your base test class to ensure that database views are dropped when the test database is cleaned up:
+If you use PHPUnit or a similar tool to run tests, add this property to your base test class to ensure that database
+views are dropped when the test database is cleaned up:
 
 ```php
 protected bool $dropViews = true;
