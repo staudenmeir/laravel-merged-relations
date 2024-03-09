@@ -9,16 +9,16 @@
         }
     ],
     "require": {
-        "php": "^8.1",
-        "illuminate/database": "^10.0",
-        "staudenmeir/laravel-migration-views": "^1.7"
+        "php": "^8.2",
+        "illuminate/database": "^11.0",
+        "staudenmeir/laravel-migration-views": "^1.9"
     },
     "require-dev": {
-        "barryvdh/laravel-ide-helper": "^2.13",
-        "orchestra/testbench": "^8.0",
+        "barryvdh/laravel-ide-helper": "^3.0",
+        "orchestra/testbench": "^9.0",
         "phpstan/phpstan": "^1.10",
-        "phpunit/phpunit": "^10.1",
-        "staudenmeir/eloquent-has-many-deep": "^1.19.3"
+        "phpunit/phpunit": "^10.5",
+        "staudenmeir/eloquent-has-many-deep": "^1.20"
     },
     "autoload": {
         "psr-4": {
