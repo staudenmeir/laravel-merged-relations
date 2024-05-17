@@ -11,7 +11,7 @@
     "require": {
         "php": "^8.2",
         "illuminate/database": "^11.0",
-        "staudenmeir/laravel-migration-views": "^1.9"
+        "staudenmeir/laravel-migration-views": "^1.9.1"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^3.0",
