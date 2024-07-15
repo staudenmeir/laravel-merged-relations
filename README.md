@@ -147,7 +147,7 @@ class Tag extends Model
 {
     use \Staudenmeir\LaravelMergedRelations\Eloquent\HasMergedRelationships;
 
-    public function allTaggables()
+    public function allTaggables(): \Staudenmeir\LaravelMergedRelations\Eloquent\Relations\MergedRelation
     {
         return $this->mergedRelation('all_taggables');
     }
@@ -162,7 +162,7 @@ class User extends Model
 {
     use \Staudenmeir\LaravelMergedRelations\Eloquent\HasMergedRelationships;
 
-    public function allComments()
+    public function allComments(): \Staudenmeir\LaravelMergedRelations\Eloquent\Relations\MergedRelation
     {
         return $this->mergedRelationWithModel(Comment::class, 'all_comments');
     }
