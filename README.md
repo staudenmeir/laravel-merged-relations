@@ -127,7 +127,7 @@ The package includes [staudenmeir/laravel-migration-views](https://github.com/st
 can use its methods to rename and drop views:
 
 ```php
-use Staudenmeir\LaravelMergedRelations\Facades\Schema;
+use Staudenmeir\LaravelMigrationViews\Facades\Schema;
 
 Schema::renameView('all_comments', 'user_comments');
 
