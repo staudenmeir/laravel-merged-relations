@@ -21,14 +21,8 @@ use Staudenmeir\LaravelMigrationViews\Schema\Grammars\SqlServerGrammar;
  * @method static void createMergeViewWithoutDuplicates(string $name, array $relations)
  * @method static void createOrReplaceMergeView(string $name, array $relations, bool $duplicates = true)
  * @method static void createOrReplaceMergeViewWithoutDuplicates(string $name, array $relations)
- * @method static void createView(string $name, $query, array $columns = null, bool $orReplace = false)
- * @method static void createOrReplaceView(string $name, $query, array $columns = null)
- * @method static void createMaterializedView(string $name, $query, array $columns = null)
- * @method static void renameView(string $from, string $to)
- * @method static void dropView(string $name, bool $ifExists = false)
- * @method static void dropViewIfExists(string $name)
- * @method static array getViewColumnListing(string $name)
- * @method static void refreshMaterializedView(string $name)
+ *
+ * @mixin \Staudenmeir\LaravelMigrationViews\Facades\Schema
  */
 class Schema extends Facade
 {
