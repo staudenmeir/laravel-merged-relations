@@ -2,7 +2,6 @@
 
 [![CI](https://github.com/staudenmeir/laravel-merged-relations/actions/workflows/ci.yml/badge.svg)](https://github.com/staudenmeir/laravel-merged-relations/actions/workflows/ci.yml)
 [![Code Coverage](https://codecov.io/gh/staudenmeir/laravel-merged-relations/graph/badge.svg?token=ZRYGD44QVX)](https://codecov.io/gh/staudenmeir/laravel-merged-relations)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/staudenmeir/laravel-merged-relations/badges/quality-score.png?b=main)](https://scrutinizer-ci.com/g/staudenmeir/laravel-merged-relations/?branch=main)
 [![Latest Stable Version](https://poser.pugx.org/staudenmeir/laravel-merged-relations/v/stable)](https://packagist.org/packages/staudenmeir/laravel-merged-relations)
 [![Total Downloads](https://poser.pugx.org/staudenmeir/laravel-merged-relations/downloads)](https://packagist.org/packages/staudenmeir/laravel-merged-relations/stats)
 [![License](https://poser.pugx.org/staudenmeir/laravel-merged-relations/license)](https://github.com/staudenmeir/laravel-merged-relations/blob/main/LICENSE)
