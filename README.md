@@ -1,6 +1,6 @@
 # Laravel Merged Relations
 
-[![CI](https://github.com/staudenmeir/laravel-merged-relations/actions/workflows/ci.yml/badge.svg)](https://github.com/staudenmeir/laravel-merged-relations/actions/workflows/ci.yml)
+[![CI](https://github.com/staudenmeir/laravel-merged-relations/actions/workflows/ci.yml/badge.svg)](https://github.com/staudenmeir/laravel-merged-relations/actions/workflows/ci.yml?query=branch%3Amain)
 [![Code Coverage](https://codecov.io/gh/staudenmeir/laravel-merged-relations/graph/badge.svg?token=ZRYGD44QVX)](https://codecov.io/gh/staudenmeir/laravel-merged-relations)
 [![Latest Stable Version](https://poser.pugx.org/staudenmeir/laravel-merged-relations/v/stable)](https://packagist.org/packages/staudenmeir/laravel-merged-relations)
 [![Total Downloads](https://poser.pugx.org/staudenmeir/laravel-merged-relations/downloads)](https://packagist.org/packages/staudenmeir/laravel-merged-relations/stats)
