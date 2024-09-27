@@ -21,6 +21,7 @@ class Builder extends Base
      */
     public function getModels($columns = ['*'])
     {
+        /** @var list<object{laravel_model: class-string<TModel>, laravel_placeholders: string}> $items */
         $items = $this->query->get($columns)->all();
 
         $models = [];
