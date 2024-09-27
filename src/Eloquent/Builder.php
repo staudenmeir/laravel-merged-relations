@@ -6,14 +6,14 @@ use Illuminate\Database\Eloquent\Builder as Base;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
+/**
+ * @template TModel of \Illuminate\Database\Eloquent\Model
+ *
+ * @extends \Illuminate\Database\Eloquent\Builder<TModel>
+ */
 class Builder extends Base
 {
-    /**
-     * Get the hydrated models without eager loading.
-     *
-     * @param array $columns
-     * @return \Illuminate\Database\Eloquent\Model[]
-     */
+    /** @inheritDoc */
     public function getModels($columns = ['*'])
     {
         $items = $this->query->get($columns)->all();
@@ -39,12 +39,7 @@ class Builder extends Base
         return $models;
     }
 
-    /**
-     * Eager load the relationships for the models.
-     *
-     * @param array $models
-     * @return array
-     */
+    /** @inheritDoc */
     public function eagerLoadRelations(array $models)
     {
         collect($models)->groupBy(function ($model) {
@@ -54,7 +49,7 @@ class Builder extends Base
 
             $relations = array_merge(
                 $this->eagerLoad,
-                $model->laravel_with ? explode(',', $model->laravel_with) : []
+                !empty($model->laravel_with) ? explode(',', $model->laravel_with) : []
             );
 
             (new Collection($models))->load($relations);

@@ -44,6 +44,11 @@ class MergedRelationsHook implements ModelHookInterface
         }
     }
 
+    /**
+     * @param \Barryvdh\LaravelIdeHelper\Console\ModelsCommand $command
+     * @param \ReflectionMethod $method
+     * @param \Illuminate\Database\Eloquent\Relations\Relation<*> $relationship
+     */
     protected function addRelationship(ModelsCommand $command, ReflectionMethod $method, Relation $relationship): void
     {
         $type = '\\' . Collection::class . '|\\' . $relationship->getRelated()::class . '[]';
