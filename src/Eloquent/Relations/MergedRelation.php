@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  * @template TRelatedModel of \Illuminate\Database\Eloquent\Model
  * @template TDeclaringModel of \Illuminate\Database\Eloquent\Model
  *
- * @extends \Illuminate\Database\Eloquent\Relations\HasMany<TRelatedModel>
+ * @extends \Illuminate\Database\Eloquent\Relations\HasMany<TRelatedModel, TDeclaringModel>
  */
 class MergedRelation extends HasMany
 {
@@ -61,9 +61,7 @@ class MergedRelation extends HasMany
      */
     public function first($columns = ['*'])
     {
-        $results = $this->take(1)->get($columns);
-
-        return count($results) > 0 ? $results->first() : null;
+        return $this->take(1)->get($columns)->first();
     }
 
     /**
@@ -74,17 +72,17 @@ class MergedRelation extends HasMany
      * @param string $pageName
      * @param int|null $page
      * @param int|null|\Closure $total
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator<TRelatedModel>
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      *
      * @throws \InvalidArgumentException
      */
     public function paginate($perPage = null, $columns = ['*'], $pageName = 'page', $page = null, $total = null)
     {
         $this->query->addSelect(
-            $this->shouldSelect($columns)
+            $this->shouldSelect((array) $columns)
         );
 
-        $paginator = $this->query->paginate($perPage, $columns, $pageName, $page);
+        $paginator = $this->query->paginate($perPage, $columns, $pageName, $page, $total);
 
         $this->hydratePivotRelations(
             $paginator->items()
@@ -96,14 +94,14 @@ class MergedRelation extends HasMany
     /**
      * Prepare the query builder for query execution.
      *
-     * @param list<string> $columns
+     * @param list<string>|string $columns
      * @return \Illuminate\Database\Eloquent\Builder<TRelatedModel>
      */
     protected function prepareQueryBuilder($columns = ['*'])
     {
         $builder = $this->query->applyScopes();
 
-        $columns = $builder->getQuery()->columns ? [] : $columns;
+        $columns = $builder->getQuery()->columns ? [] : (array) $columns;
 
         $builder->addSelect(
             $this->shouldSelect($columns)

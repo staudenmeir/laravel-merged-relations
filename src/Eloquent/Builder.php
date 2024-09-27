@@ -13,7 +13,12 @@ use Illuminate\Database\Eloquent\Relations\Relation;
  */
 class Builder extends Base
 {
-    /** @inheritDoc */
+    /**
+     * Get the hydrated models without eager loading.
+     *
+     * @param list<string>|string $columns
+     * @return array<int, TModel>
+     */
     public function getModels($columns = ['*'])
     {
         $items = $this->query->get($columns)->all();
@@ -21,6 +26,7 @@ class Builder extends Base
         $models = [];
 
         foreach ($items as $item) {
+            /** @var class-string<TModel> $class */
             $class = Relation::getMorphedModel($item->laravel_model) ?? $item->laravel_model;
 
             $unset = ['laravel_model', 'laravel_placeholders'];
@@ -33,7 +39,7 @@ class Builder extends Base
                 unset($item->$key);
             }
 
-            $models[] = (new $class())->hydrate([$item])[0];
+            $models[] = (new $class())->newQuery()->hydrate([$item])[0];
         }
 
         return $models;
