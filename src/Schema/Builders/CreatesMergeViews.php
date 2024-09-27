@@ -269,6 +269,7 @@ trait CreatesMergeViews
         }
 
         if ($this->isHasManyDeepRelationWithLeadingBelongsTo($relation)) {
+            /** @var \Staudenmeir\EloquentHasManyDeep\HasManyDeep $relation */
             return $relation->getFarParent()->getQualifiedKeyName();
         }
 
@@ -294,6 +295,7 @@ trait CreatesMergeViews
         }
 
         if ($this->isHasManyDeepRelationWithLeadingBelongsTo($relation)) {
+            /** @var \Staudenmeir\EloquentHasManyDeep\HasManyDeep $relation */
             $relation->getQuery()
                      ->join(
                          $relation->getFarParent()->getTable(),
