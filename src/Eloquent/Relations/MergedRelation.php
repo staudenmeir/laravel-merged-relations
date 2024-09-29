@@ -65,7 +65,7 @@ class MergedRelation extends HasMany
     }
 
     /**
-     * Paginate the given query.
+     * Get a paginator for the "select" statement.
      *
      * @param int|\Closure|null $perPage
      * @param list<string>|string $columns
