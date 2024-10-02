@@ -16,7 +16,7 @@ trait CreatesMergeViews
      * Create a view that merges relationships.
      *
      * @param string $name
-     * @param \Illuminate\Database\Eloquent\Relations\Relation[] $relations
+     * @param non-empty-list<\Illuminate\Database\Eloquent\Relations\Relation<*, *, *>> $relations
      * @param bool $duplicates
      * @param bool $orReplace
      * @return void
@@ -36,7 +36,7 @@ trait CreatesMergeViews
      * Create a view that merges relationships without duplicates.
      *
      * @param string $name
-     * @param \Illuminate\Database\Eloquent\Relations\Relation[] $relations
+     * @param non-empty-list<\Illuminate\Database\Eloquent\Relations\Relation<*, *, *>> $relations
      * @return void
      */
     public function createMergeViewWithoutDuplicates($name, array $relations)
@@ -48,7 +48,7 @@ trait CreatesMergeViews
      * Create a view that merges relationships or replace an existing one.
      *
      * @param string $name
-     * @param array $relations
+     * @param non-empty-list<\Illuminate\Database\Eloquent\Relations\Relation<*, *, *>> $relations
      * @param bool $duplicates
      * @return void
      */
@@ -61,7 +61,7 @@ trait CreatesMergeViews
      * Create a view that merges relationships or replace an existing one without duplicates.
      *
      * @param string $name
-     * @param array $relations
+     * @param non-empty-list<\Illuminate\Database\Eloquent\Relations\Relation<*, *, *>> $relations
      * @return void
      */
     public function createOrReplaceMergeViewWithoutDuplicates($name, array $relations)
@@ -72,7 +72,7 @@ trait CreatesMergeViews
     /**
      * Remove the foreign key constraints from the relationships.
      *
-     * @param \Illuminate\Database\Eloquent\Relations\Relation[] $relations
+     * @param non-empty-list<\Illuminate\Database\Eloquent\Relations\Relation<*, *, *>> $relations
      * @return void
      */
     protected function removeConstraints(array $relations)
@@ -90,7 +90,7 @@ trait CreatesMergeViews
     /**
      * Get the foreign key of the original relationship.
      *
-     * @param \Illuminate\Database\Eloquent\Relations\Relation $relation
+     * @param \Illuminate\Database\Eloquent\Relations\Relation<*, *, *> $relation
      * @return string
      */
     protected function getOriginalForeignKey(Relation $relation)
@@ -117,9 +117,9 @@ trait CreatesMergeViews
     /**
      * Get the merge query.
      *
-     * @param \Illuminate\Database\Eloquent\Relations\Relation[] $relations
+     * @param non-empty-list<\Illuminate\Database\Eloquent\Relations\Relation<*, *, *>> $relations
      * @param string $union
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return \Illuminate\Database\Eloquent\Builder<*>
      */
     protected function getQuery(array $relations, $union)
     {
@@ -138,6 +138,7 @@ trait CreatesMergeViews
         foreach ($relations as $relation) {
             $relationQuery = $relation->getQuery();
 
+            /** @var string $from */
             $from = $relationQuery->getQuery()->from;
 
             $foreignKey = $this->getMergedForeignKey($relation);
@@ -186,17 +187,19 @@ trait CreatesMergeViews
     /**
      * Get the columns of all relationship tables.
      *
-     * @param \Illuminate\Database\Eloquent\Relations\Relation[] $relations
-     * @return array
+     * @param non-empty-list<\Illuminate\Database\Eloquent\Relations\Relation<*, *, *>> $relations
+     * @return array<string, list<string>>
      */
     protected function getRelationshipColumns(array $relations)
     {
         $columns = [];
 
         foreach ($relations as $relation) {
+            /** @var string $table */
             $table = $relation->getQuery()->getQuery()->from;
 
             if (!isset($columns[$table])) {
+                /** @var list<string> $listing */
                 $listing = $relation->getRelated()->getConnection()->getSchemaBuilder()->getColumnListing($table);
 
                 $columns[$table] = $listing;
@@ -209,8 +212,8 @@ trait CreatesMergeViews
     /**
      * Get the pivot tables that are requested by all relationships.
      *
-     * @param array $relations
-     * @return array
+     * @param non-empty-list<\Illuminate\Database\Eloquent\Relations\Relation<*, *, *>> $relations
+     * @return list<array{accessor: string, columns: list<string>, table: string}>
      */
     protected function getPivotTables(array $relations): array
     {
@@ -259,7 +262,7 @@ trait CreatesMergeViews
     /**
      * Get the foreign key for the merged relationship.
      *
-     * @param \Illuminate\Database\Eloquent\Relations\Relation $relation
+     * @param \Illuminate\Database\Eloquent\Relations\Relation<*, *, *> $relation
      * @return string
      */
     protected function getMergedForeignKey(Relation $relation)
@@ -269,6 +272,7 @@ trait CreatesMergeViews
         }
 
         if ($this->isHasManyDeepRelationWithLeadingBelongsTo($relation)) {
+            /** @var \Staudenmeir\EloquentHasManyDeep\HasManyDeep<*> $relation */
             return $relation->getFarParent()->getQualifiedKeyName();
         }
 
@@ -278,7 +282,7 @@ trait CreatesMergeViews
     /**
      * Add relation-specific constraints to the query.
      *
-     * @param \Illuminate\Database\Eloquent\Relations\Relation $relation
+     * @param \Illuminate\Database\Eloquent\Relations\Relation<*, *, *> $relation
      * @return void
      */
     protected function addRelationQueryConstraints(Relation $relation)
@@ -294,6 +298,7 @@ trait CreatesMergeViews
         }
 
         if ($this->isHasManyDeepRelationWithLeadingBelongsTo($relation)) {
+            /** @var \Staudenmeir\EloquentHasManyDeep\HasManyDeep<*> $relation */
             $relation->getQuery()
                      ->join(
                          $relation->getFarParent()->getTable(),
@@ -307,7 +312,7 @@ trait CreatesMergeViews
     /**
      * Determine if the relationship is a HasManyDeep relationship that starts with a BelongsTo relationship.
      *
-     * @param \Illuminate\Database\Eloquent\Relations\Relation $relation
+     * @param \Illuminate\Database\Eloquent\Relations\Relation<*, *, *> $relation
      * @return bool
      */
     protected function isHasManyDeepRelationWithLeadingBelongsTo(Relation $relation): bool

@@ -6,6 +6,12 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
+/**
+ * @template TRelatedModel of \Illuminate\Database\Eloquent\Model
+ * @template TDeclaringModel of \Illuminate\Database\Eloquent\Model
+ *
+ * @extends \Illuminate\Database\Eloquent\Relations\HasMany<TRelatedModel, TDeclaringModel>
+ */
 class MergedRelation extends HasMany
 {
     /**
@@ -29,8 +35,8 @@ class MergedRelation extends HasMany
     /**
      * Execute the query as a "select" statement.
      *
-     * @param array $columns
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @param list<string>|string $columns
+     * @return \Illuminate\Database\Eloquent\Collection<int, TRelatedModel>
      */
     public function get($columns = ['*'])
     {
@@ -50,32 +56,33 @@ class MergedRelation extends HasMany
     /**
      * Execute the query and get the first related model.
      *
-     * @param array $columns
-     * @return mixed
+     * @param list<string>|string $columns
+     * @return TRelatedModel|null
      */
     public function first($columns = ['*'])
     {
-        $results = $this->take(1)->get($columns);
-
-        return count($results) > 0 ? $results->first() : null;
+        return $this->take(1)->get($columns)->first();
     }
 
     /**
      * Get a paginator for the "select" statement.
      *
-     * @param int|null $perPage
-     * @param array $columns
+     * @param int|\Closure|null $perPage
+     * @param list<string>|string $columns
      * @param string $pageName
-     * @param int $page
+     * @param int|null $page
+     * @param int|null|\Closure $total
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     *
+     * @throws \InvalidArgumentException
      */
-    public function paginate($perPage = null, $columns = ['*'], $pageName = 'page', $page = null)
+    public function paginate($perPage = null, $columns = ['*'], $pageName = 'page', $page = null, $total = null)
     {
         $this->query->addSelect(
-            $this->shouldSelect($columns)
+            $this->shouldSelect((array) $columns)
         );
 
-        $paginator = $this->query->paginate($perPage, $columns, $pageName, $page);
+        $paginator = $this->query->paginate($perPage, $columns, $pageName, $page, $total);
 
         $this->hydratePivotRelations(
             $paginator->items()
@@ -87,25 +94,27 @@ class MergedRelation extends HasMany
     /**
      * Prepare the query builder for query execution.
      *
-     * @param array $columns
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @param list<string>|string $columns
+     * @return \Illuminate\Database\Eloquent\Builder<TRelatedModel>
      */
     protected function prepareQueryBuilder($columns = ['*'])
     {
         $builder = $this->query->applyScopes();
 
-        $columns = $builder->getQuery()->columns ? [] : $columns;
+        $columns = $builder->getQuery()->columns ? [] : (array) $columns;
 
-        return $builder->addSelect(
+        $builder->addSelect(
             $this->shouldSelect($columns)
         );
+
+        return $builder;
     }
 
     /**
      * Get the select columns for the relation query.
      *
-     * @param array $columns
-     * @return array
+     * @param list<string> $columns
+     * @return list<string>
      */
     protected function shouldSelect(array $columns = ['*'])
     {
@@ -122,7 +131,7 @@ class MergedRelation extends HasMany
     /**
      * Hydrate the pivot table relationships on the models.
      *
-     * @param array $models
+     * @param list<TRelatedModel> $models
      * @return void
      */
     protected function hydratePivotRelations(array $models): void
@@ -161,8 +170,8 @@ class MergedRelation extends HasMany
     /**
      * Get the pivot tables from the models.
      *
-     * @param array $models
-     * @return array
+     * @param list<TRelatedModel> $models
+     * @return array<string, array{columns: list<string>, table: string}>
      */
     protected function getPivotTables(array $models): array
     {
@@ -189,10 +198,10 @@ class MergedRelation extends HasMany
     /**
      * Match the eagerly loaded results to their parents.
      *
-     * @param array $models
-     * @param \Illuminate\Database\Eloquent\Collection $results
+     * @param list<TDeclaringModel> $models
+     * @param \Illuminate\Database\Eloquent\Collection<int, TRelatedModel> $results
      * @param string $relation
-     * @return array
+     * @return list<TDeclaringModel>
      */
     public function match(array $models, Collection $results, $relation)
     {

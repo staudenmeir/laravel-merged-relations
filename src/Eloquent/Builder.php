@@ -6,21 +6,28 @@ use Illuminate\Database\Eloquent\Builder as Base;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
+/**
+ * @template TModel of \Illuminate\Database\Eloquent\Model
+ *
+ * @extends \Illuminate\Database\Eloquent\Builder<TModel>
+ */
 class Builder extends Base
 {
     /**
      * Get the hydrated models without eager loading.
      *
-     * @param array $columns
-     * @return \Illuminate\Database\Eloquent\Model[]
+     * @param list<string>|string $columns
+     * @return array<int, TModel>
      */
     public function getModels($columns = ['*'])
     {
+        /** @var list<object{laravel_model: class-string<TModel>, laravel_placeholders: string}> $items */
         $items = $this->query->get($columns)->all();
 
         $models = [];
 
         foreach ($items as $item) {
+            /** @var class-string<TModel> $class */
             $class = Relation::getMorphedModel($item->laravel_model) ?? $item->laravel_model;
 
             $unset = ['laravel_model', 'laravel_placeholders'];
@@ -33,18 +40,13 @@ class Builder extends Base
                 unset($item->$key);
             }
 
-            $models[] = (new $class())->hydrate([$item])[0];
+            $models[] = (new $class())->newQuery()->hydrate([$item])[0];
         }
 
         return $models;
     }
 
-    /**
-     * Eager load the relationships for the models.
-     *
-     * @param array $models
-     * @return array
-     */
+    /** @inheritDoc */
     public function eagerLoadRelations(array $models)
     {
         collect($models)->groupBy(function ($model) {
@@ -54,7 +56,7 @@ class Builder extends Base
 
             $relations = array_merge(
                 $this->eagerLoad,
-                $model->laravel_with ? explode(',', $model->laravel_with) : []
+                !empty($model->laravel_with) ? explode(',', $model->laravel_with) : []
             );
 
             (new Collection($models))->load($relations);
