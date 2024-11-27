@@ -215,7 +215,7 @@ trait CreatesMergeViews
      * Get the pivot tables that are requested by all relationships.
      *
      * @param non-empty-list<\Illuminate\Database\Eloquent\Relations\Relation<*, *, *>> $relations
-     * @return list<array{accessor: string, columns: list<string>, table: string}>
+     * @return list<array{accessor: string, columns: array<int, string>, table: string}>
      */
     protected function getPivotTables(array $relations): array
     {
