@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Staudenmeir\LaravelMergedRelations\Eloquent\Relations\MergedRelation;
 
+/**
+ * @phpstan-ignore trait.unused
+ */
 trait HasMergedRelationships
 {
     /**
