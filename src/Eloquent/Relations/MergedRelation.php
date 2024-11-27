@@ -72,7 +72,7 @@ class MergedRelation extends HasMany
      * @param string $pageName
      * @param int|null $page
      * @param int|null|\Closure $total
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator<int, TRelatedModel>
      *
      * @throws \InvalidArgumentException
      */
@@ -82,6 +82,7 @@ class MergedRelation extends HasMany
             $this->shouldSelect((array) $columns)
         );
 
+        /** @var \Illuminate\Contracts\Pagination\LengthAwarePaginator<int, TRelatedModel> $paginator */
         $paginator = $this->query->paginate($perPage, $columns, $pageName, $page, $total);
 
         $this->hydratePivotRelations(
