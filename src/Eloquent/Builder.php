@@ -54,9 +54,13 @@ class Builder extends Base
         })->each(function ($models) {
             $model = $models[0];
 
+            /** @var string $with */
+            $with = $model->getAttribute('laravel_with');
+
+            /** @var array<int, string> $relations */
             $relations = array_merge(
                 $this->eagerLoad,
-                !empty($model->laravel_with) ? explode(',', $model->laravel_with) : []
+                !empty($model->laravel_with) ? explode(',', $with) : []
             );
 
             (new Collection($models))->load($relations);

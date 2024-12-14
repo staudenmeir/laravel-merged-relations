@@ -132,7 +132,7 @@ class MergedRelation extends HasMany
     /**
      * Hydrate the pivot table relationships on the models.
      *
-     * @param list<TRelatedModel> $models
+     * @param array<int, TRelatedModel> $models
      * @return void
      */
     protected function hydratePivotRelations(array $models): void
@@ -171,7 +171,7 @@ class MergedRelation extends HasMany
     /**
      * Get the pivot tables from the models.
      *
-     * @param list<TRelatedModel> $models
+     * @param array<int, TRelatedModel> $models
      * @return array<string, array{columns: list<string>, table: string}>
      */
     protected function getPivotTables(array $models): array
@@ -196,14 +196,7 @@ class MergedRelation extends HasMany
         return $tables;
     }
 
-    /**
-     * Match the eagerly loaded results to their parents.
-     *
-     * @param list<TDeclaringModel> $models
-     * @param \Illuminate\Database\Eloquent\Collection<int, TRelatedModel> $results
-     * @param string $relation
-     * @return list<TDeclaringModel>
-     */
+    /** @inheritDoc */
     public function match(array $models, Collection $results, $relation)
     {
         $models = parent::match($models, $results, $relation);

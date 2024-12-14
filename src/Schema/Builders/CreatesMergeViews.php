@@ -83,6 +83,8 @@ trait CreatesMergeViews
 
             $relation->getQuery()->getQuery()->wheres = collect($relation->getQuery()->getQuery()->wheres)
                 ->reject(function ($where) use ($foreignKey) {
+                    /** @var array{column: string} $where */
+
                     return $where['column'] === $foreignKey;
                 })->values()->all();
         }
@@ -215,7 +217,7 @@ trait CreatesMergeViews
      * Get the pivot tables that are requested by all relationships.
      *
      * @param non-empty-list<\Illuminate\Database\Eloquent\Relations\Relation<*, *, *>> $relations
-     * @return list<array{accessor: string, columns: list<string>, table: string}>
+     * @return list<array{accessor: string, columns: array<int, string>, table: string}>
      */
     protected function getPivotTables(array $relations): array
     {
@@ -223,6 +225,7 @@ trait CreatesMergeViews
 
         foreach ($relations as $i => $relation) {
             if ($relation instanceof BelongsToMany) {
+                /** @var array<int, string> $pivotColumns */
                 $pivotColumns = $relation->getPivotColumns();
 
                 if ($pivotColumns) {

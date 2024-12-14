@@ -17,10 +17,10 @@ use Staudenmeir\LaravelMigrationViews\Schema\Grammars\SQLiteGrammar;
 use Staudenmeir\LaravelMigrationViews\Schema\Grammars\SqlServerGrammar;
 
 /**
- * @method static void createMergeView(string $name, array $relations, bool $duplicates = true, bool $orReplace = false)
- * @method static void createMergeViewWithoutDuplicates(string $name, array $relations)
- * @method static void createOrReplaceMergeView(string $name, array $relations, bool $duplicates = true)
- * @method static void createOrReplaceMergeViewWithoutDuplicates(string $name, array $relations)
+ * @method static void createMergeView(string $name, non-empty-list<\Illuminate\Database\Eloquent\Relations\Relation<*, *, *>> $relations, bool $duplicates = true, bool $orReplace = false)
+ * @method static void createMergeViewWithoutDuplicates(string $name, non-empty-list<\Illuminate\Database\Eloquent\Relations\Relation<*, *, *>> $relations)
+ * @method static void createOrReplaceMergeView(string $name, non-empty-list<\Illuminate\Database\Eloquent\Relations\Relation<*, *, *>> $relations, bool $duplicates = true)
+ * @method static void createOrReplaceMergeViewWithoutDuplicates(string $name, non-empty-list<\Illuminate\Database\Eloquent\Relations\Relation<*, *, *>> $relations)
  *
  * @mixin \Staudenmeir\LaravelMigrationViews\Facades\Schema
  */
