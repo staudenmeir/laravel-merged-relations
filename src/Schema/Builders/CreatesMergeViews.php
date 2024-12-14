@@ -83,6 +83,8 @@ trait CreatesMergeViews
 
             $relation->getQuery()->getQuery()->wheres = collect($relation->getQuery()->getQuery()->wheres)
                 ->reject(function ($where) use ($foreignKey) {
+                    /** @var array{column: string} $where */
+
                     return $where['column'] === $foreignKey;
                 })->values()->all();
         }
@@ -223,6 +225,7 @@ trait CreatesMergeViews
 
         foreach ($relations as $i => $relation) {
             if ($relation instanceof BelongsToMany) {
+                /** @var array<int, string> $pivotColumns */
                 $pivotColumns = $relation->getPivotColumns();
 
                 if ($pivotColumns) {
