@@ -10,9 +10,9 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Str;
 use ReflectionClass;
 use ReflectionMethod;
+use ReflectionNamedType;
 use Staudenmeir\LaravelMergedRelations\Eloquent\HasMergedRelationships;
 use Staudenmeir\LaravelMergedRelations\Eloquent\Relations\MergedRelation;
-use Throwable;
 
 class MergedRelationsHook implements ModelHookInterface
 {
@@ -32,13 +32,11 @@ class MergedRelationsHook implements ModelHookInterface
                 continue;
             }
 
-            try {
+            if ($method->getReturnType() instanceof ReflectionNamedType
+                && $method->getReturnType()->getName() === MergedRelation::class) {
+                /** @var \Illuminate\Database\Eloquent\Relations\Relation<*, *, *> $relationship */
                 $relationship = $method->invoke($model);
-            } catch (Throwable) { // @codeCoverageIgnore
-                continue; // @codeCoverageIgnore
-            }
 
-            if ($relationship instanceof MergedRelation) {
                 $this->addRelationship($command, $method, $relationship);
             }
         }
