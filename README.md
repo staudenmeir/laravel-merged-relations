@@ -24,6 +24,7 @@ Use this command if you are in PowerShell on Windows (e.g. in VS Code):
 
 | Laravel | Package |
 |:--------|:--------|
+| 12.x    | 1.10    |
 | 11.x    | 1.9     |
 | 10.x    | 1.6     |
 | 9.x     | 1.5     |
