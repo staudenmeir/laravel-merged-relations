@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasOneOrManyThrough;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use RuntimeException;
 use Staudenmeir\EloquentHasManyDeep\HasManyDeep;
+use Staudenmeir\EloquentHasManyDeep\HasOneDeep;
 
 trait CreatesMergeViews
 {
@@ -233,7 +234,7 @@ trait CreatesMergeViews
                         'table' => $relation->getTable(),
                     ];
                 }
-            } elseif($relation instanceof HasManyDeep) {
+            } elseif($relation instanceof HasManyDeep || $relation instanceof HasOneDeep) {
                 $intermediateTables = $relation->getIntermediateTables();
 
                 foreach ($intermediateTables as $accessor => $table) {
@@ -275,7 +276,7 @@ trait CreatesMergeViews
         }
 
         if ($this->isHasManyDeepRelationWithLeadingBelongsTo($relation)) {
-            /** @var \Staudenmeir\EloquentHasManyDeep\HasManyDeep<*, *> $relation */
+            /** @var \Staudenmeir\EloquentHasManyDeep\HasManyDeep<*, *>|\Staudenmeir\EloquentHasManyDeep\HasOneDeep<*, *> $relation */
             return $relation->getFarParent()->getQualifiedKeyName();
         }
 
@@ -320,7 +321,7 @@ trait CreatesMergeViews
      */
     protected function isHasManyDeepRelationWithLeadingBelongsTo(Relation $relation): bool
     {
-        return $relation instanceof HasManyDeep
+        return ($relation instanceof HasManyDeep || $relation instanceof HasOneDeep)
             && $relation->getFirstKeyName() === $relation->getParent()->getKeyName();
     }
 }
