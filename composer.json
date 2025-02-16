@@ -20,7 +20,7 @@
         "orchestra/testbench-core": "^10.0",
         "phpstan/phpstan": "^2.0",
         "phpunit/phpunit": "^11.0",
-        "staudenmeir/eloquent-has-many-deep": "dev-l12"
+        "staudenmeir/eloquent-has-many-deep": "^1.21"
     },
     "autoload": {
         "psr-4": {
