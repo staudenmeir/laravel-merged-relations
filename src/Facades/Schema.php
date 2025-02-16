@@ -63,27 +63,27 @@ class Schema extends Facade
         return match ($connection->getDriverName()) {
             'mysql' => new MySqlBuilder(
                 $connection->setSchemaGrammar(
-                    $connection->withTablePrefix(new MySqlGrammar())
+                    new MySqlGrammar($connection)
                 )
             ),
             'mariadb' => new MariaDbBuilder(
                 $connection->setSchemaGrammar(
-                    $connection->withTablePrefix(new MariaDbGrammar())
+                    new MariaDbGrammar($connection)
                 )
             ),
             'pgsql' => new PostgresBuilder(
                 $connection->setSchemaGrammar(
-                    $connection->withTablePrefix(new PostgresGrammar())
+                    new PostgresGrammar($connection)
                 )
             ),
             'sqlite' => new SQLiteBuilder(
                 $connection->setSchemaGrammar(
-                    $connection->withTablePrefix(new SQLiteGrammar())
+                    new SQLiteGrammar($connection)
                 )
             ),
             'sqlsrv' => new SqlServerBuilder(
                 $connection->setSchemaGrammar(
-                    $connection->withTablePrefix(new SqlServerGrammar())
+                    new SqlServerGrammar($connection)
                 )
             ),
             default => throw new RuntimeException('This database is not supported.'), // @codeCoverageIgnore

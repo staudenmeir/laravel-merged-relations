@@ -4,9 +4,8 @@ namespace Staudenmeir\LaravelMergedRelations\Schema\Builders;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOneOrMany;
-use Illuminate\Database\Eloquent\Relations\HasOneThrough;
+use Illuminate\Database\Eloquent\Relations\HasOneOrManyThrough;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use RuntimeException;
 use Staudenmeir\EloquentHasManyDeep\HasManyDeep;
@@ -106,8 +105,7 @@ trait CreatesMergeViews
             return $relation->getQualifiedForeignPivotKeyName();
         }
 
-        // TODO[L12]
-        if ($relation instanceof HasManyThrough || $relation instanceof HasOneThrough) {
+        if ($relation instanceof HasOneOrManyThrough) {
             return $relation->getQualifiedFirstKeyName();
         }
 
