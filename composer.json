@@ -36,9 +36,6 @@
         "sort-packages": true
     },
     "extra": {
-        "branch-alias": {
-            "dev-l12": "1.10.x-dev"
-        },
         "laravel": {
             "providers": [
                 "Staudenmeir\\LaravelMergedRelations\\DatabaseServiceProvider",
