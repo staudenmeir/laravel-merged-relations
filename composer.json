@@ -10,12 +10,12 @@
     ],
     "require": {
         "php": "^8.2",
-        "illuminate/database": "^12.0",
+        "illuminate/database": "^12.0|^13.0",
         "staudenmeir/laravel-migration-views": "^1.11"
     },
     "require-dev": {
-        "barryvdh/laravel-ide-helper": "^3.0",
-        "laravel/framework": "^12.0",
+        "barryvdh/laravel-ide-helper": "^3.0|dev-master",
+        "laravel/framework": "^12.0|^13.0",
         "mockery/mockery": "^1.6",
         "orchestra/testbench-core": "^10.0",
         "phpstan/phpstan": "^2.0",
